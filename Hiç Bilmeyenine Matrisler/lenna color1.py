@@ -65,7 +65,7 @@ class RGBMatrixScene(Scene):
         b_matrix = Matrix(B).scale(0.4).to_edge(DOWN).set_color(BLUE)
 
         # Titles
-        r_label = Text("Kırmızı (Red) Kanalı", color=RED).scale(0.5).next_to(r_matrix, UP)
+        r_label = Text("Kırmızı (Red) Kanalı", color=RED).scale(0.5).next_to(r_matrix, DOWN)
         g_label = Text("Yeşil(Green) Kanalı", color=GREEN).scale(0.5).next_to(g_matrix, UP)
         b_label = Text("Mavi (Blue) Kanalı", color=BLUE).scale(0.5).next_to(b_matrix, UP)
 
@@ -118,6 +118,6 @@ class RGBMatrixScene(Scene):
 
             FadeIn(color_matrix_group),
 
-            run_time=2
+            run_time=1
         )
         self.wait(2)
