@@ -3,6 +3,7 @@ import random
 
 class ExpandZeroMatrix(Scene):
     def construct(self):
+
         # Initial 2x3 zero matrix
         matrix_2x3 = Matrix([[0, 0, 0],
                              [0, 0, 0]])
@@ -15,7 +16,7 @@ class ExpandZeroMatrix(Scene):
         matrix_3x4.move_to(ORIGIN)
 
         # Show the 2x3 matrix
-        title = Text("Sıfır Matris").next_to(matrix_2x3, UP, buff=1)
+        title = Title("Sıfır Matris").next_to(matrix_2x3, UP, buff=1)
         self.play(Write(title))
         self.wait(1)
         self.play(Write(matrix_2x3))
@@ -31,33 +32,34 @@ class ExpandZeroMatrix(Scene):
             [random.randint(1, 9) for _ in range(3)] for _ in range(3)
         ])
         random_matrix_3x3.move_to(ORIGIN)
-        title_square = Text("Kare Matris (3x3)").next_to(random_matrix_3x3, UP, buff=1)
+        title_square = Title("Kare Matris")
         self.play(Write(title_square))
         self.wait(1)
+        #write the description
+        description = Text("Satır ve sütun sayısı eşit olan matristir.", font_size=36)
+        description.next_to(title_square, DOWN, buff=0.5)
+        self.play(Write(description))
+        self.wait(1)
+
         self.play(Write(random_matrix_3x3))
         self.wait(1)
 
 
-        self.play(FadeOut(title_square), FadeOut(random_matrix_3x3))
+        self.play(FadeOut(random_matrix_3x3))
 
         # Show a 4x4 square matrix with random numbers
         random_matrix_4x4 = Matrix([
             [random.randint(1, 9) for _ in range(4)] for _ in range(4)
         ])
         random_matrix_4x4.move_to(ORIGIN)
-        title_square_4 = Text("Kare Matris (4x4)").next_to(random_matrix_4x4, UP, buff=1)
-        self.play(Write(title_square_4))
-        self.wait(1)
         self.play(Write(random_matrix_4x4))
         self.wait(1)
 
-        self.play(FadeOut(title_square_4), FadeOut(random_matrix_4x4))
+        self.play(FadeOut(random_matrix_4x4))
 
         # Show a 1x1 square matrix
         random_matrix_1x1 = Matrix([[random.randint(1, 9)]])
         random_matrix_1x1.move_to(ORIGIN)
-        title_square_1 = Text("Kare Matris (1x1)").next_to(random_matrix_1x1, UP, buff=1)
-        self.play(Write(title_square_1))
         self.wait(1)
         self.play(Write(random_matrix_1x1))
         self.wait(1)
@@ -66,7 +68,7 @@ class ExpandZeroMatrix(Scene):
         rect_1x1 = SurroundingRectangle(random_matrix_1x1.get_entries()[0], color=YELLOW, buff=0.15)
         self.play(Create(rect_1x1))
         self.wait(1)
-        self.play(FadeOut(rect_1x1), FadeOut(title_square_1), FadeOut(random_matrix_1x1))
+        self.play(FadeOut(rect_1x1),FadeOut(random_matrix_1x1), FadeOut(title_square), FadeOut(description))
 
         # Create 3x3 identity matrix
         identity_3x3 = Matrix([
@@ -77,10 +79,21 @@ class ExpandZeroMatrix(Scene):
         identity_3x3.move_to(ORIGIN)
 
         # Show the 3x3 identity matrix
-        title_id = Text("Birim Matris").next_to(identity_3x3, UP, buff=1)
+        title_id = Title("Birim Matris")
         self.play(Write(title_id))
         self.wait(1)
+        # Write the description
+        description_id = Text("Ana köşegenindeki elemeanlar 1, \n diğer elemanları 0 olan matristir.", font_size=36)
+        description_id.next_to(title_id, DOWN, buff=0.5)
+        self.play(Write(description_id))
         self.play(Write(identity_3x3))
+        self.wait(1)
+        #I veya In ile gösterilir.
+        description_In = Text("I veya I", font_size=36)
+        subscript_n = Text("n", font_size=28).next_to(description_In, RIGHT, buff=0.07).align_to(description_In, DOWN)
+        description_In = VGroup(description_In, subscript_n, Text(" ile gösterilir.", font_size=36).next_to(subscript_n, RIGHT, buff=0.05))
+        description_In.to_edge(DOWN, buff=0.5)
+        self.play(Write(description_In))
         self.wait(1)
 
         # Highlight the diagonal ones
@@ -119,7 +132,7 @@ class ExpandZeroMatrix(Scene):
         identity_5x5.move_to(ORIGIN)
 
         # Animate expansion to 5x5 identity matrix
-        self.play(Transform(identity_3x3, identity_5x5), FadeOut(highlight_rects), )
+        self.play(Transform(identity_3x3, identity_5x5), FadeOut(highlight_rects),FadeOut(description_id), FadeOut(description_In))
         self.wait(1)
         #highlight the diagonal ones in 5x5
         diagonal_indices_5x5 = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]
@@ -149,7 +162,7 @@ class ExpandZeroMatrix(Scene):
         diagonal_matrix.move_to(ORIGIN)
 
         # Show the diagonal matrix
-        title_diag = Text("Köşegen Matris").next_to(diagonal_matrix, UP, buff=1)
+        title_diag = Title("Köşegen Matris")
         self.play(Write(title_diag))
         self.wait(1)
         self.play(Write(diagonal_matrix))
@@ -191,7 +204,7 @@ class ExpandZeroMatrix(Scene):
         ])
         upper_triangular_matrix.move_to(ORIGIN)
         # Show the upper triangular matrix
-        title_upper = Text("Üst Üçgen Matris").next_to(upper_triangular_matrix, UP, buff=1)
+        title_upper = Title("Üst Üçgen Matris")
         self.play(Write(title_upper))
         self.wait(1)
         self.play(Write(upper_triangular_matrix))
@@ -205,12 +218,22 @@ class ExpandZeroMatrix(Scene):
         self.play(Create(highlight_upper_rects))
         self.wait(1)
         # Draw a right angle triangle at the right of the matrix
+        # Calculate the positions of the non-zero (upper triangular) entries
+        upper_entries = [upper_triangular_matrix.get_entries()[i*3 + j] for i, j in upper_indices]
+        # Get their centers
+        points = [entry.get_center() for entry in upper_entries]
+        # Create a polygon that covers the upper triangle area
         triangle = Polygon(
-            upper_triangular_matrix.get_right() + RIGHT * 1.5 + UP * 0.5,
-            upper_triangular_matrix.get_right() + RIGHT * 0.5 + UP * 0.5,
-            upper_triangular_matrix.get_right() + RIGHT * 1.5 + DOWN * 0.5,
-            color=YELLOW, fill_opacity=0.5
+            points[0],  # (0,0)
+            points[1],  # (0,1)
+            points[2],  # (0,2)
+            points[4],  # (1,2)
+            points[5],  # (2,2)
+            points[3],  # (1,1)
+            points[0],  # back to (0,0)
+            color=TEAL, fill_opacity=0.3
         )
+        triangle.move_to(upper_triangular_matrix.get_center())
         self.play(Create(triangle))
         self.wait(1)
         self.play(FadeOut(triangle))
@@ -226,7 +249,7 @@ class ExpandZeroMatrix(Scene):
         ])
         lower_triangular_matrix.move_to(ORIGIN)
         # Show the lower triangular matrix
-        title_lower = Text("Alt Üçgen Matris").next_to(lower_triangular_matrix, UP, buff=1)
+        title_lower = Title("Alt Üçgen Matris")
         self.play(Write(title_lower))
         self.wait(1)
         self.play(Write(lower_triangular_matrix))
@@ -240,12 +263,22 @@ class ExpandZeroMatrix(Scene):
         self.play(Create(highlight_lower_rects))
         self.wait(1)
         # Draw a right angle triangle at the left of the matrix
+        # Calculate the positions of the non-zero (lower triangular) entries
+        lower_entries = [lower_triangular_matrix.get_entries()[i*3 + j] for i, j in lower_indices]
+        # Get their centers
+        points_lower = [entry.get_center() for entry in lower_entries]
+        # Create a polygon that covers the lower triangle area
         triangle_lower = Polygon(
-            lower_triangular_matrix.get_right() + RIGHT * 0.5 + DOWN * 0.5,
-            lower_triangular_matrix.get_right() + RIGHT * 0.5 + UP * 0.5,
-            lower_triangular_matrix.get_right() + RIGHT * 1.5 + DOWN * 0.5,
-            color=YELLOW, fill_opacity=0.5
+            points_lower[0],  # (0,0)
+            points_lower[1],  # (1,0)
+            points_lower[3],  # (2,0)
+            points_lower[4],  # (2,1)
+            points_lower[5],  # (2,2)
+            points_lower[2],  # (1,1)
+            points_lower[0],  # back to (0,0)
+            color=TEAL, fill_opacity=0.3
         )
+        triangle_lower.move_to(lower_triangular_matrix.get_center())
         self.play(Create(triangle_lower))
         self.wait(1)
         self.play(FadeOut(triangle_lower))
