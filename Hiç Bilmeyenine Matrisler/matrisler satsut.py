@@ -8,7 +8,13 @@ class MatrixHighlightScene(Scene):
             [4, 5, 6]
         ])
         self.play(Create(matrix))
-        self.wait(3)
+        self.wait(4)
+        #indicate the brackets
+        left_bracket, right_bracket = matrix.get_brackets()
+        brackets = VGroup(left_bracket, right_bracket)
+        self.play(Indicate(brackets))
+        self.wait(1)
+
 
         # Highlight the rows
         row_rects = VGroup()
@@ -48,6 +54,11 @@ class MatrixHighlightScene(Scene):
         j_text.set_color([BLUE, PURPLE])
         self.play(Write(i_text), Write(j_text))
         self.wait(1)
+        #indicate i and j
+        self.play(Indicate(i_text))
+        self.play(Indicate(j_text))
+        self.wait(1)
+        # Fade out i and j texts
         self.play(FadeOut(i_text), FadeOut(j_text))
         # Highlight the i-hat (row indices) 1 and 2
         i_labels = VGroup(
@@ -90,8 +101,14 @@ class MatrixHighlightScene(Scene):
         a23_text = Text("A'nın (2,3) elemanı = 6", font_size=32).next_to(element_label, DOWN, buff=0.6)
         self.play(Write(a23_text))
         self.wait(2)
-        ij_text = Text("i = satır, j = sütun", font_size=32).to_edge(UP)
+        #write the result as A_{23} = 6
+        a23_result = MathTex(r"A_{23} = 6", font_size=42).next_to(element_label, DOWN, buff=0.6)
+        self.play(Transform(a23_text, a23_result))
+        self.wait(3)
+        ij_text = Text(" i = satır \n j = sütun ", font_size=32).to_edge(UP)
         self.play(Write(ij_text))
         self.wait(2)
         self.play(FadeOut(row2_rect), FadeOut(col3_rect), FadeOut(element_rect), FadeOut(element_label), FadeOut(a23_text), FadeOut(ij_text))
+        self.wait(1)
+        self.play(FadeOut(matrix))
         
